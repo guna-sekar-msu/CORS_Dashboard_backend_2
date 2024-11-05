@@ -10,7 +10,6 @@ from datetime import datetime
 import pandas as pd
 import boto3
 from decouple import config
-from .db_helper import fetch_all_opusnet_data
 
 # Set up the S3 connection
 s3 = boto3.resource(
@@ -86,9 +85,8 @@ class StacovJsonView(APIView):
                 input_date = datetime.strptime(input_date_str['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
                 file_name = 'opusnet_converted_corrected.csv'
                 file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
-                # with open(file_path, 'rb') as file:
-                #     df = pd.read_csv(file)
-                df = fetch_all_opusnet_data()
+                with open(file_path, 'rb') as file:
+                    df = pd.read_csv(file)
                 geojson_OPUSNET_str = generate_OPUSNET_geojson(df,input_date)
                 geojson_OPUSNET_data = json.loads(geojson_OPUSNET_str)
                 return Response(geojson_OPUSNET_data,status=status.HTTP_200_OK)
