@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
-from .models import read_stacov, generate_geojson, generate_CSV_geojson,generate_MYCS2_geojson,generate_OPUSNET_geojson
+from .models import read_stacov, generate_geojson, generate_CSV_geojson,generate_MYCS2_geojson,generate_OPUSNET_geojson,generate_MYCS_uncertainty_geojson
 import os
 import json
 from datetime import datetime
@@ -83,13 +83,29 @@ class StacovJsonView(APIView):
             elif input_date_str['options'] == 'OPUSNET Data':
                 # Convert the input date string to a datetime object
                 input_date = datetime.strptime(input_date_str['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                file_name = 'opusnet_converted_corrected.csv'
-                file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
-                with open(file_path, 'rb') as file:
-                    df = pd.read_csv(file)
+                file_name = 'opusnet_converted_corrected_1.csv'
+                # file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
+                # with open(file_path, 'rb') as file:
+                #     df = pd.read_csv(file)
+                # df = fetch_all_opusnet_data()
+                # Fetch the MYCS2 predictions CSV from S3
+                obj = s3.Bucket('cors-dashboard-dataset').Object(file_name).get()
+                df = pd.read_csv(obj['Body'])
                 geojson_OPUSNET_str = generate_OPUSNET_geojson(df,input_date)
                 geojson_OPUSNET_data = json.loads(geojson_OPUSNET_str)
                 return Response(geojson_OPUSNET_data,status=status.HTTP_200_OK)
+            elif input_date_str['options'] ==  'MYCS Uncertainty':
+                # Convert the input date string to a datetime object
+                input_date = datetime.strptime(input_date_str['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                file_name = 'mycs2_uncertainty.csv'
+                # file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
+                # with open(file_path, 'rb') as file:
+                #     df = pd.read_csv(file)
+                obj = s3.Bucket('cors-dashboard-dataset').Object(file_name).get()
+                df = pd.read_csv(obj['Body'])
+                geojson_MYCS_str = generate_MYCS_uncertainty_geojson(df,input_date)
+                geojson_MYCS2_uncertainty_data = json.loads(geojson_MYCS_str)
+                return Response(geojson_MYCS2_uncertainty_data,status=status.HTTP_200_OK)
         
         except ValueError:
             return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)

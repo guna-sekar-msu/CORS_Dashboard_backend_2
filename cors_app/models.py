@@ -312,4 +312,75 @@ def generate_OPUSNET_geojson(df,input_date,):
         return json.dumps(geojson, indent=4)
 
     return filtered_df
+
+def generate_MYCS_uncertainty_geojson(df,input_date,):
+    # Convert the 'Date' column to datetime format, allowing pandas to infer the format
+    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce', format='%Y-%m-%d')  # Coerce will turn invalid formats into NaT
+    # Convert the input date to a datetime object, ensuring it's only the date part
+    input_date = pd.to_datetime(input_date).date()
+    # Filter the dataframe for the rows where the date matches the input (ignoring the time)
+    filtered_df = df[df['Date'].dt.date == input_date]
+    if filtered_df.empty:
+            print(f"No data found for the given date: {input_date.strftime('%Y-%m-%d')}")
+    else:
+        data = []
+        for index, row in filtered_df.iterrows():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "SITEID": row['Code'],
+                    "STATUS": "Uncertainty"
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [row['Longitude'],row['Latitude']],
+                    "Uncertainty": [row['Lon_Uncertainty'],row['Lat_Uncertainty']]
+                }
+            }
+            data.append(feature)
+        present_count = len(filtered_df['Code'])
+        geojson = {
+            "type": "FeatureCollection",
+            "status_count": present_count,  # This counts only the sites marked as "Present"
+            "uncertainty": True,
+            "mycs2_prediction": True,
+            "features": data
+        }
+        return json.dumps(geojson, indent=4)
+    return filtered_df
     
+def generate_MYCS_uncertainty_geojson(df,input_date,):
+    # Convert the 'Date' column to datetime format, allowing pandas to infer the format
+    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce', format='%Y-%m-%d')  # Coerce will turn invalid formats into NaT
+    # Convert the input date to a datetime object, ensuring it's only the date part
+    input_date = pd.to_datetime(input_date).date()
+    # Filter the dataframe for the rows where the date matches the input (ignoring the time)
+    filtered_df = df[df['Date'].dt.date == input_date]
+    if filtered_df.empty:
+            print(f"No data found for the given date: {input_date.strftime('%Y-%m-%d')}")
+    else:
+        data = []
+        for index, row in filtered_df.iterrows():
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "SITEID": row['Code'],
+                    "STATUS": "Uncertainty"
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [row['Longitude'],row['Latitude']],
+                    "Uncertainty": [row['Lon_Uncertainty'],row['Lat_Uncertainty']]
+                }
+            }
+            data.append(feature)
+        present_count = len(filtered_df['Code'])
+        geojson = {
+            "type": "FeatureCollection",
+            "status_count": present_count,  # This counts only the sites marked as "Present"
+            "uncertainty": True,
+            "mycs2_prediction": True,
+            "features": data
+        }
+        return json.dumps(geojson, indent=4)
+    return filtered_df
