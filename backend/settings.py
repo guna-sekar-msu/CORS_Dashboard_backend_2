@@ -115,6 +115,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:5173',
     'https://cors-vite-frontend.vercel.app',
     'https://cors-dashboard-frontend-2.vercel.app',
+    'https://cors-dashboard-frontend-2-optimized.vercel.app',
 )
 
 # Internationalization
