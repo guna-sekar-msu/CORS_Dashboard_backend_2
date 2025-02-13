@@ -86,7 +86,7 @@ class StacovJsonView(APIView):
                 file_name = 'opusnet_converted_corrected_1.csv'
                 # file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
                 # with open(file_path, 'rb') as file:
-                #     df = pd.read_csv(file)
+                #     df = pd.read_csv(file).nrows=100000
                 # df = fetch_all_opusnet_data()
                 # Fetch the MYCS2 predictions CSV from S3
                 obj = s3.Bucket('cors-dashboard-dataset').Object(file_name).get()
