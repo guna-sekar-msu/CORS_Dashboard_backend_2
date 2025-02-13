@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-&8_g@jpay!6iun(k)dpk#ejm+#uih@zr#r5#&0bg+iv6l4l3te
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app','.now.sh','127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app','.now.sh','127.0.0.1','https://cors-dashboard-backend-2.vercel.app']
 
 
 # Application definition
