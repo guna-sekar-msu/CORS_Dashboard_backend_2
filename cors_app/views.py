@@ -83,10 +83,10 @@ class StacovJsonView(APIView):
             elif input_date_str['options'] == 'OPUSNET Data':
                 # Convert the input date string to a datetime object
                 input_date = datetime.strptime(input_date_str['date'], '%Y-%m-%dT%H:%M:%S.%fZ')
-                file_name = 'opusnet_converted_corrected_1.csv'
+                file_name = 'opusnet_converted_corrected.csv'
                 # file_path = os.path.join(settings.BASE_DIR, 'static', file_name)
                 # with open(file_path, 'rb') as file:
-                #     df = pd.read_csv(file).nrows=10000
+                #     df = pd.read_csv(file)
                 # df = fetch_all_opusnet_data()
                 # Fetch the MYCS2 predictions CSV from S3
                 obj = s3.Bucket('cors-dashboard-dataset').Object(file_name).get()
