@@ -118,7 +118,7 @@ CORS_ORIGIN_WHITELIST = (
     'https://cors-dashboard-frontend-2-optimized.vercel.app',
     'https://cors-dashboard-frontend-3-optimized.vercel.app',
     'https://glistening-wisp-77f858.netlify.app',
-    'https://msu-frontend-singlelayer-zeta.vercel.app/',
+    'https://cors-dashboard-frontend-4.vercel.app/',
 )
 
 # Internationalization
